@@ -80,7 +80,7 @@ def convert_tiff_to_xarray(folder_path, band_name):
     geotiff_list = glob.glob(f'{folder_path}/*.tif')
     years = [path[-8:-4] for path in geotiff_list] # extract years from TIFF paths
     # TODO: order chronologically
-    # TODO: I need to calibrate images probably... It seems to get darker or brighter.
+    # TODO: I need to calibrate images probably... https://worldbank.github.io/OpenNightLights/tutorials/mod5_1_DMSP-OLS_intercalibration.html#elvidge2009fifteen
 
     time_var = xr.Variable('time', np.array(years))
     geotiff_da = xr.concat([rioxarray.open_rasterio(i) for i in geotiff_list], dim = time_var)
