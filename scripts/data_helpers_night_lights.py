@@ -1,4 +1,4 @@
-# Helper functions for downloading data from Google Earth Engine
+# Helper functions for downloading night lights data from Google Earth Engine
 import ee
 import time
 import xarray as xr
