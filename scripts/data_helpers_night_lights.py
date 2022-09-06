@@ -51,10 +51,20 @@ def get_gee_collection(collection_id):
     return collection_im
 
 
+def get_crs(collection_id):
+    """ Returns crs and crsTransform """
+
+    image = get_gee_collection(collection_id).first()
+
+    crs = image.projection().getInfo()['crs']
+    crsTransform = image.projection().getInfo()['transform']
+
+    return crs, crsTransform
 
 def download_gee_DMSP(lon, lat, folder_name,
                  collection_id = "NOAA/DMSP-OLS/NIGHTTIME_LIGHTS",
-                 start_year = 1992, end_year = 2012, buffer_region = 1.5e6):
+                 start_year = 1992, end_year = 2012, interval = 1, buffer_region = 1.5e6,
+                      crs = None, crsTransform=None):
     """ Downloads one image per year from NOAA/DMSP-OLS
     lat: float
         Latitude
@@ -68,6 +78,8 @@ def download_gee_DMSP(lon, lat, folder_name,
         Start year you would like to download data for
     end_year: optional, int
         End year you would like to download data for (inclusive)
+    interval: optional, int
+        How many years to increment by between start and end
     buffer_region: optional, int
         Region around latitude/longitude coordinate to download image for
 
@@ -75,7 +87,7 @@ def download_gee_DMSP(lon, lat, folder_name,
 
     collection = get_gee_collection(collection_id).select('stable_lights')
 
-    years = range(start_year, end_year + 1)
+    years = range(start_year, end_year + 1, interval)
 
     for year in years:
         print('Year: ', year)
@@ -96,19 +108,69 @@ def download_gee_DMSP(lon, lat, folder_name,
             calibrated = calibrate_DMSP_OLS(collection_year, year)
             print("Calibrated second image.")
         finally:
-            export_gee_image(calibrated, folder_name, f'lat_{lat}_lon_{lon}_{year}', region)
+            export_gee_image(calibrated, folder_name, f'lat_{lat}_lon_{lon}_{year}', region, crs=crs, crsTransform = crsTransform)
 
     print('Finished Exporting')
 
+def download_yearly_collection(lon, lat, folder_name,
+                 collection_id = "CIESIN/GPWv411/GPW_Population_Count",
+                 start_year = 2000, end_year = 2020, interval = 5, buffer_region = 1.5e6,
+                      crs = None, crsTransform=None):
+    """ Downloads one image per year from Census
+    lat: float
+        Latitude
+    lon: float
+        Longitude
+    folder_name: str
+        Name of folder in Google Drive you would like to export to
+    collection_id: optional, str
+        Name of collection
+    start_year: optional, int
+        Start year you would like to download data for
+    end_year: optional, int
+        End year you would like to download data for (inclusive)
+    interval: optional, int
+        How many years to increment by between start and end
+    buffer_region: optional, int
+        Region around latitude/longitude coordinate to download image for
 
-def export_gee_image(image, folder_name, image_name, region):
+    """
+
+    collection = get_gee_collection(collection_id)
+
+    years = range(start_year, end_year + 1, interval)
+
+    for year in years:
+        print('Year: ', year)
+        start_date = f'{year}-01-01'
+        end_date = f'{year}-12-31'
+
+        collection_filtered = collection.filterDate(start_date, end_date)
+        collection_year = collection_filtered.first()
+
+        geo_point = ee.Geometry.Point(lon, lat)
+        region = geo_point.buffer(buffer_region).bounds()
+
+        export_gee_image(collection_year, folder_name, f'lat_{lat}_lon_{lon}_{year}', region, crs=crs, crsTransform = crsTransform)
+
+    print('Finished Exporting')
+
+def export_gee_image(image, folder_name, image_name, region, crs=None, crsTransform=None):
     """Start GEE export task and print status until completion"""
+
+    if crs is None:
+        crs = image.projection().getInfo()['crs']
+
+    if crsTransform is None:
+        crsTransform = image.projection().getInfo()['transform']
 
     # start export task
     task = ee.batch.Export.image.toDrive(image=image,
                                          folder=folder_name,
                                          fileNamePrefix=image_name,
-                                         region=region)
+                                         region=region,
+                                         crs=crs,
+                                         crsTransform=crsTransform)
     task.start()
     print(f'Starting task for: {image_name}')
     status = task.status()['state']
