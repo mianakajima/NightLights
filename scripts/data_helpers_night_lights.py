@@ -3,11 +3,22 @@ import ee
 import time
 import xarray as xr
 import rioxarray
+from PIL import Image
 import glob
 import numpy as np
 import pandas as pd
 
 calibration = pd.read_csv('../data/Elvidge_DMSP_intercalib_coef.csv')
+
+def convert_tiff_to_PIL(path):
+    """ Convert GeoTIFF image to PIL image"""
+
+    im = rioxarray.open_rasterio(path)
+    im_array = im.values.astype(np.uint8).squeeze()
+    pil_image = Image.fromarray(im_array)
+
+    return pil_image
+
 
 def get_calib_coefficients(id, year):
     """
