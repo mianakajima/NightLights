@@ -3,21 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <title>Population from Night Lights</title>
+    <link rel="stylesheet" href="{{url_for ('static', filename='css/main.css')}}">
 </head>
 <body>
 
 <h1> Population from Night Lights</h1>
 
-<div>
+<div class="flex-container">
+     <div class="imresults">
+        <div class="label">
+            Image
+        </div>
+        <div class="nb_results">
+            Naive Bayes
+        </div>
+        <div class="cnn_results">
+            CNN
+        </div>
 
-  <form>
-      <label for="cityname">City: </label><br>
-      <input type="text" id="cityname" name="cityname"><br>
-  </form>
+        <div class="actual_results">
+            Actual
+        </div>
 
-    <p> Chosen city is {{city_name}}</p>
+    </div>
+
+
+    <div class="imresults">
+        <div class="im1">
+            <img src="{{im1path}}"/>
+        </div>
+        <div class="nb_results">
+            {{nb_predictions[0]}}
+        </div>
+        <div class="cnn_results">
+            {{CNN_predictions[0]}}
+        </div>
+        <div class="actual_results">
+            Class 1
+        </div>
+    </div>
+
+    <div class="imresults">
+        <div class="im1">
+            <img src="{{im2path}}"/>
+        </div>
+        <div class="nb_results">
+            {{nb_predictions[1]}}
+        </div>
+        <div class="cnn_results">
+            {{CNN_predictions[1]}}
+        </div>
+        <div class="actual_results">
+            Class 2
+        </div>
+    </div>
+
+
+    <div class="imresults">
+        <div class="im1">
+            <img src="{{im3path}}"/>
+        </div>
+        <div class="nb_results">
+            {{nb_predictions[2]}}
+        </div>
+        <div class="cnn_results">
+            {{CNN_predictions[2]}}
+        </div>
+        <div class="actual_results">
+            Class 3
+        </div>
+    </div>
+
+
+    <div class="imresults">
+        <div class="im1">
+            <img src="{{im4path}}"/>
+        </div>
+        <div class="nb_results">
+            {{nb_predictions[3]}}
+        </div>
+        <div class="cnn_results">
+            {{CNN_predictions[3]}}
+        </div>
+        <div class="actual_results">
+            Class 4
+        </div>
+    </div>
+
+
+    <div class="imresults">
+        <div class="im1">
+            <img src="{{im5path}}"/>
+        </div>
+        <div class="nb_results">
+            {{nb_predictions[4]}}
+        </div>
+        <div class="cnn_results">
+            {{CNN_predictions[4]}}
+        </div>
+        <div class="actual_results">
+            Class 5
+        </div>
+    </div>
 
 </div>
+
+
+
 
 </body>
 </html>

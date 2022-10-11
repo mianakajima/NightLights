@@ -1,0 +1,25 @@
+.flex-container{
+  display: flex;
+}
+
+.flex-container div{
+    margin-left: 1em;
+    flex-shrink: 1;
+}
+
+img {
+    width: 150px;
+    height: 150px;
+    filter: brightness(120%);
+    filter: contrast(100%);
+    filter: grayscale(100%);
+}
+
+.imresults{
+    display: flex;
+    flex-direction: column;
+}
+
+.label{
+    height: 153px;
+}
