@@ -5,15 +5,26 @@ To create conda environment:
 ## Repository Organization
 
 ### Data
-- The `data` folder contains an image samples downloaded from DMSP-OLS using Google Earth Engine. The folder is arranged by population class following image organization needed to use `ImageFolder()` pytorch loading function. 
+- The `data` folder contains image samples downloaded from DMSP-OLS using Google Earth Engine. The folder is arranged by population class following image organization needed to use `ImageFolder()` pytorch loading function. 
   - A total of 200 cities were sampled from 3 census years (2000, 2005, 2010) resulting in 600 images. Five hundred images are included in the training set and 100 images each are in the dev and test sets. 
   - The images are already calibrated and formatted to jpg from the raw TIFF files downloaded. 
+
+#### Image Classes
+
+Classes were developed based on populations of sampled images. The populations were split into quintiles. Since downloading many images from Google Earth Engine can take considerable time, having 5 classes seemed reasonable from training data size (for training a CNN). In the future, it would be interesting to download more data and create more granular classes.
+
+- Class 1: Less than 5.7 million 
+- Class 2: Between 5.7 million and 9.9 million
+- Class 3: Between 9.9 million and 15.4 million
+- Class 4: Between 15.4 million and 28 million
+- Class 5: Between 28 million and 159 million
   
 #### Image Processing
 - Script to download satellite data to Google Drive and process images: [scripts/data_download.py](https://github.com/mianakajima/NightLights/blob/main/scripts/data_download.py)
   - Lines 5 - 10 may be modified to download more images
-- The images have been calibrated. Notebook exploring calibration is [here](https://github.com/mianakajima/NightLights/blob/main/notebooks/06_DMSP_OLS_calibration.ipynb). 
-- Cities were sampled based on population. Notebook to develop cities to sample is [here](https://github.com/mianakajima/NightLights/blob/main/notebooks/07_sample_cities.ipynb). 
+  - If using, a [Google Earth Engine Developer account](https://developers.google.com/earth-engine) needs to be created first
+- Notebook exploring calibration is [here](https://github.com/mianakajima/NightLights/blob/main/notebooks/06_DMSP_OLS_calibration.ipynb). 
+- Notebook to develop cities to sample is [here](https://github.com/mianakajima/NightLights/blob/main/notebooks/07_sample_cities.ipynb). 
 
 ### Modeling 
 
