@@ -8,6 +8,7 @@ import glob
 import numpy as np
 import pandas as pd
 
+
 calibration = pd.read_csv('../data/Elvidge_DMSP_intercalib_coef.csv')
 
 def convert_tiff_to_PIL(path):
